@@ -4,9 +4,74 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="Estilos/estilos.css">
+    <link rel="stylesheet" href="Estilos/reset.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
     <title>Bate Papo UOL</title>
 </head>
 <body>
-    
+    <div class="telaEntrada">
+        <img src="Img\logoUol.png" alt="Bate papo UOL">
+        <input class="nomeUsuario" type="text" placeholder="Digite seu nome">
+        <button onclick="loginUsuario()">Entrar</button>
+    </div>
+    <div class="caixa topo">
+        <img src="Img\logoUol.png" alt="Bate papo UOL">
+        <ion-icon onclick="listaContatos()" name="people-sharp"></ion-icon>
+    </div>
+    <div class="containerChat">
+        
+    </div>
+    <div class="caixa comentarios">
+        <input class="mensagem" type="text" placeholder="Escreva aqui...">
+        <ion-icon onclick="enviarMensagem()" name="paper-plane-outline"></ion-icon>
+    </div>
+    <div class="fundoEmbacado oculto">
+        <div class="contatos">
+            <div class="escolhaContato">Escolha um contato<br>
+                para enviar mensagem:</div>
+                <ul>
+                    <li>
+                        <div class="perfil">
+                            <ion-icon name="people-sharp"></ion-icon> 
+                            Todos
+                        </div>
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                    </li>
+                    <li>
+                        <div class="perfil">
+                            <ion-icon name="person-circle-sharp"></ion-icon> 
+                            Usuário
+                        </div>
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                        
+                    </li>
+                </ul>
+            <div class="escolhaContato">Escolha a visibilidade:</div>
+                <ul>
+                    <li onclick="enviarMensagemPublica()">
+                        <div class="perfil">
+                            <ion-icon name="lock-open-sharp"></ion-icon> 
+                            Público
+                        </div>
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                    </li>
+                    <li onclick="enviarMensagemPrivada()">
+                        <div class="perfil">
+                            <ion-icon name="lock-closed-sharp"></ion-icon>
+                             Reservadamente
+                        </div>
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                    </li>
+                </ul>
+        </div>
+    </div>
+        
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <script src="Scripts\script.js"></script>
 </body>
 </html>
