@@ -20,7 +20,7 @@
     </div>
     <div class="caixa topo">
         <img src="Img\logoUol.png" alt="Bate papo UOL">
-        <ion-icon onclick="listaContatos()" name="people-sharp"></ion-icon>
+        <ion-icon onclick="buscarParticipantes()" name="people-sharp"></ion-icon>
     </div>
     <div class="containerChat">
         
@@ -33,25 +33,11 @@
         <div class="contatos">
             <div class="escolhaContato">Escolha um contato<br>
                 para enviar mensagem:</div>
-                <ul>
-                    <li>
-                        <div class="perfil">
-                            <ion-icon name="people-sharp"></ion-icon> 
-                            Todos
-                        </div>
-                        <ion-icon name="checkmark-outline"></ion-icon>
-                    </li>
-                    <li>
-                        <div class="perfil">
-                            <ion-icon name="person-circle-sharp"></ion-icon> 
-                            Usuário
-                        </div>
-                        <ion-icon name="checkmark-outline"></ion-icon>
-                        
-                    </li>
+                <ul class="listaContatos">
+                    
                 </ul>
             <div class="escolhaContato">Escolha a visibilidade:</div>
-                <ul>
+                <ul class="visibilidade">
                     <li onclick="enviarMensagemPublica()">
                         <div class="perfil">
                             <ion-icon name="lock-open-sharp"></ion-icon> 
