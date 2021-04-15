@@ -81,13 +81,13 @@ img {
     line-height: 16px;
     font-weight: 400;
 }
-.normal {
+.message {
     background: #FFFFFF;
 }
 .status {
     background: #DCDCDC;
 }
-.privado {
+.private_message {
     background: #FFDEDE;
 }
 .usuario {
