@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="telaEntrada">
-        <img src="Img\logoUol.png" alt="Bate papo UOL">
+        <img class="logoUol" src="Img\logoUol.png" alt="Bate papo UOL">
         <input class="nomeUsuario" type="text" placeholder="Digite seu nome">
         <button class="login" onclick="loginUsuario()">Entrar</button>
         <img class="carregando oculto" src="Img\Loading_icon.gif" alt="Loading">
@@ -28,7 +28,7 @@
             <input class="mensagem" type="text" placeholder="Escreva aqui...">
             <div class="infoDestinatario"></div>
         </div>
-        <ion-icon class="mensagemParaEnviar" onclick="enviarMensagem()" name="paper-plane-outline"></ion-icon>
+        <ion-icon onclick="enviarMensagem()" name="paper-plane-outline"></ion-icon>
     </div>
     <div class="contatosContainer oculto">
         <div onclick="abrirAbaContatos()" class="fundoEmbacado"></div>

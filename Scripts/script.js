@@ -1,14 +1,21 @@
 let nomeDoUsuario;
-let mensagens;
+let mensagens = [];
 function loginUsuario() {
-    const carregar = document.querySelector(".carregando");
-    carregar.classList.remove('oculto');
+    carregandoLogin()
     nomeDoUsuario = document.querySelector(".nomeUsuario").value
     const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants", {name: nomeDoUsuario})
     promessa.then(atualizarMensagens);
     promessa.then(atualizarParticipantes)
     promessa.then(removerTelaInicial)
     promessa.catch(tratarErroLogin);
+}
+function carregandoLogin() {
+    const carregar = document.querySelector(".carregando");
+    const inputUsuario = document.querySelector(".nomeUsuario");
+    const entrar = document.querySelector(".login");
+    carregar.classList.remove('oculto');
+    inputUsuario.classList.add('oculto');
+    entrar.classList.add('oculto');
 }
 function atualizarMensagens() {
     setInterval(buscarMensagem, 3000)
@@ -24,13 +31,6 @@ function removerTelaInicial() {
     statusConexao()
     setInterval(statusConexao, 5000)
 }
-function tratarErroLogin(erro) {
-    const error = erro.response.data
-    const statusErro = erro.response.status
-    const tipoDeErro = "Esse nome já existe!"
-    tratatErros(error, statusErro, tipoDeErro)
-    location.reload();
-}
 function tratatErros(error, statusErro, tipoDeErro) {
     if(statusErro===400) {
         alert(`Ocorreu erro: ${statusErro}\n${tipoDeErro}`);
@@ -38,6 +38,13 @@ function tratatErros(error, statusErro, tipoDeErro) {
         alert(`Ocorreu erro: ${statusErro}\n${error}`);
     }
 } 
+function tratarErroLogin(erro) {
+    const error = erro.response.data
+    const statusErro = erro.response.status
+    const tipoDeErro = "Esse nome já existe!"
+    tratatErros(error, statusErro, tipoDeErro)
+    location.reload();
+}
 function statusConexao() {
     const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/status", {name: nomeDoUsuario})
     promessa.catch(logout)
@@ -52,11 +59,22 @@ function logout(erro) {
 function buscarMensagem() {
     const promessa = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages")
     promessa.then(mensagensRecebidas)
+    promessa.catch(tratarErroMensagens)
 }
 function mensagensRecebidas (resposta) {
     mensagens = resposta.data;
+    const tempoMensagemFinal = mensagens[mensagens.length-1].time;
     chatDeMensagens()
+    verificarMensagemNova(tempoMensagemFinal)
 }
+function tratarErroMensagens(erro) {
+    const error = erro.response.data
+    const statusErro = erro.response.status
+    const tipoDeErro = "Não foi possivel carregar as mensagens. Por favor, faço o login novamente"
+    tratatErros(error, statusErro, tipoDeErro)
+    location.reload();
+}
+let ultimaMensagem;
 function chatDeMensagens() {
     const todasAsMensagens = document.querySelector(".containerChat");
     todasAsMensagens.innerHTML = "";
@@ -65,24 +83,27 @@ function chatDeMensagens() {
             todasAsMensagens.innerHTML += ` 
             <div class="chat status">
                 <span class="tempo">(${mensagens[i].time})</span>&nbsp<span class="usuario">${mensagens[i].from}</span>&nbsp${mensagens[i].text}
-            </div>
-            `
+            </div> `
         } else if(mensagens[i].type==='private_message' && (mensagens[i].from===nomeDoUsuario || mensagens[i].to===nomeDoUsuario) ) {
             todasAsMensagens.innerHTML += ` 
             <div class="chat reservadamente">
                 <span class="tempo">(${mensagens[i].time})</span>&nbsp<span class="usuario">${mensagens[i].from}</span> reservadamente para <span class="usuario">${mensagens[i].to}</span>&nbsp: ${mensagens[i].text}
-            </div>
-            `
-        }else if(mensagens[i].type==='message'){
+            </div>`
+        } else if(mensagens[i].type==='message'){
             todasAsMensagens.innerHTML += ` 
             <div class="chat publico">
                 <span class="tempo">(${mensagens[i].time})</span>&nbsp<span class="usuario">${mensagens[i].from}</span> para <span class="usuario">${mensagens[i].to}</span>&nbsp: ${mensagens[i].text}
-            </div>
-            `
+            </div> `
         }
     }
-    let ultimaMensagem = document.querySelector(".containerChat div:last-of-type")
-    ultimaMensagem.scrollIntoView();
+    ultimaMensagem = document.querySelector(".containerChat div:last-of-type");
+}
+let tempoUltimaMensagem;
+function verificarMensagemNova(tempoMensagemFinal) {
+    if (tempoMensagemFinal!==tempoUltimaMensagem) {
+        tempoUltimaMensagem = tempoMensagemFinal;
+        ultimaMensagem.scrollIntoView();
+    }
 }
 let tipoDeMensagem = 'message';
 function tipoDaMensagem(mensagemTipo) {
@@ -100,7 +121,6 @@ function enviarMensagem() {
     promessa.then(buscarMensagem);
     promessa.catch(tratarErroEnvioMensagem);
     document.querySelector(".mensagem").value="";
-    
 }
 function tratarErroEnvioMensagem(erro) {
     const error = erro.response.data
@@ -125,7 +145,7 @@ function buscarParticipantes() {
     promessa.then(participantesAtivos)
     promessa.catch(tratarErroDeParticipantes)
 }
-function tratarErroDeParticipantes() {
+function tratarErroDeParticipantes(erro) {
     const error = erro.response.data
     const statusErro = erro.response.status
     const tipoDeErro = "Não foi possivel buscar os Participantes"
@@ -140,7 +160,6 @@ function abrirAbaContatos() {
     const abaContatos = document.querySelector(".contatosContainer")
     if(abaContatos.classList.contains("oculto")){
         abaContatos.classList.remove("oculto")
-        
     } else {
         abaContatos.classList.add("oculto")
     }
