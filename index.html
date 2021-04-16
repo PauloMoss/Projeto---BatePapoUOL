@@ -16,41 +16,46 @@
     <div class="telaEntrada">
         <img src="Img\logoUol.png" alt="Bate papo UOL">
         <input class="nomeUsuario" type="text" placeholder="Digite seu nome">
-        <button onclick="loginUsuario()">Entrar</button>
+        <button class="login" onclick="loginUsuario()">Entrar</button>
+        <div class="carregando oculto"></div>
     </div>
     <div class="caixa topo">
         <img src="Img\logoUol.png" alt="Bate papo UOL">
-        <ion-icon onclick="buscarParticipantes()" name="people-sharp"></ion-icon>
+        <ion-icon onclick="abrirAbaContatos()" name="people-sharp"></ion-icon>
     </div>
     <div class="containerChat">
         
     </div>
     <div class="caixa comentarios">
-        <input class="mensagem" type="text" placeholder="Escreva aqui...">
-        <ion-icon onclick="enviarMensagem()" name="paper-plane-outline"></ion-icon>
+        <div>
+            <input class="mensagem" type="text" placeholder="Escreva aqui...">
+            <div class="infoDestinatario"></div>
+        </div>
+        <ion-icon class="mensagemParaEnviar" onclick="enviarMensagem()" name="paper-plane-outline"></ion-icon>
     </div>
-    <div class="fundoEmbacado oculto">
+    <div class="contatosContainer oculto">
+        <div onclick="abrirAbaContatos()" class="fundoEmbacado"></div>
         <div class="contatos">
             <div class="escolhaContato">Escolha um contato<br>
                 para enviar mensagem:</div>
-                <ul class="listaContatos">
+                <ul class="listaDeUsuarios">
                     
                 </ul>
             <div class="escolhaContato">Escolha a visibilidade:</div>
                 <ul class="visibilidade">
-                    <li onclick="enviarMensagemPublica()">
+                    <li onclick="tipoDaMensagem(this)" id="message">
                         <div class="perfil">
                             <ion-icon name="lock-open-sharp"></ion-icon> 
                             Público
                         </div>
-                        <ion-icon name="checkmark-outline"></ion-icon>
+                        <ion-icon class="check" name="checkmark-outline"></ion-icon>
                     </li>
-                    <li onclick="enviarMensagemPrivada()">
+                    <li onclick="tipoDaMensagem(this)" id="private_message">
                         <div class="perfil">
                             <ion-icon name="lock-closed-sharp"></ion-icon>
                              Reservadamente
                         </div>
-                        <ion-icon name="checkmark-outline"></ion-icon>
+                        <ion-icon class="check" name="checkmark-outline"></ion-icon>
                     </li>
                 </ul>
         </div>
