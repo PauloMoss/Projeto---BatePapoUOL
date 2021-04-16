@@ -161,7 +161,7 @@ function listaContatos() {
         todosOsUsuarios.innerHTML += `
         <li onclick="enviarPara(this)" id="${participantes[i].name}">
             <div class="perfil">
-                <ion-icon name="people-sharp"></ion-icon> 
+                <ion-icon name="person-circle-sharp"></ion-icon> 
                 ${participantes[i].name}
             </div>
             <ion-icon class="check" name="checkmark-outline"></ion-icon>
