@@ -59,12 +59,15 @@ body {
 }
 .comentarios input {
     font-size: 18px;
-    border: none;
     font-style: italic;
+}
+::placeholder {
+    color: #000;
 }
 .infoDestinatario {
     font-size: 14px;
     color: gray;
+    margin-top: 5px;
 }
 .caixa {
     display: flex;
@@ -91,16 +94,14 @@ img {
     overflow-y: scroll;
 }
 .chat {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    line-height: 18px;
+    padding: 10px 10px;
     min-height: 40px;
     border-radius: 2px;
     margin: 4px 0;
     font-size: 14px;
-    line-height: 16px;
     font-weight: 400;
-    /**word-break: break-all;**/
+    word-break: break-all;
 }
 .publico {
     background: #FFFFFF;
@@ -112,7 +113,13 @@ img {
     background: #FFDEDE;
 }
 .usuario {
-    font-weight: 700;
+    color: #000;
+    font-weight: bold;
+}
+.tempo {
+    color: #aaa;
+    font-weight: 300;
+    min-width: 65px;
 }
 .contatosContainer {
     position: fixed; 
@@ -122,7 +129,6 @@ img {
     height: 100%;
     display: flex;
     z-index: 20;
-   
 }
 .fundoEmbacado {
     background: rgba(0, 0, 0, 0.6);
@@ -159,14 +165,14 @@ li {
   }
 .selecionado .check {
     opacity: 1;
-    margin-right: 20px;
+    margin-right: 25px;
 }
 .perfil {
     min-height: 30px;
 }
 .perfil > ion-icon {
     font-size: 20px;
-    margin: 0 10px;
+    margin: 0 15px;
 }
 .oculto {
    display: none;

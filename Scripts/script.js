@@ -9,26 +9,45 @@ function loginUsuario() {
     promessa.then(atualizarParticipantes)
     promessa.then(removerTelaInicial)
     promessa.catch(tratarErroLogin);
-    setInterval(statusConexao, 5000)
-}
-function removerTelaInicial() {
-    const telaLogin = document.querySelector(".telaEntrada")
-    telaLogin.classList.add("oculto")
 }
 function atualizarMensagens() {
     setInterval(buscarMensagem, 3000)
     buscarMensagem()
 }
-function tratarErroLogin() {
-    alert("Esse nome já existe");
+function atualizarParticipantes() {
+    setInterval(buscarParticipantes, 10000)
+    buscarParticipantes()
 }
+function removerTelaInicial() {
+    const telaLogin = document.querySelector(".telaEntrada")
+    telaLogin.classList.add("oculto")
+    statusConexao()
+    setInterval(statusConexao, 5000)
+}
+function tratarErroLogin(erro) {
+    const error = erro.response.data
+    const statusErro = erro.response.status
+    const tipoDeErro = "Esse nome já existe!"
+    tratatErros(error, statusErro, tipoDeErro)
+    location.reload();
+}
+function tratatErros(error, statusErro, tipoDeErro) {
+    if(statusErro===400) {
+        alert(`Ocorreu erro: ${statusErro}\n${tipoDeErro}`);
+    } else {
+        alert(`Ocorreu erro: ${statusErro}\n${error}`);
+    }
+} 
 function statusConexao() {
     const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/status", {name: nomeDoUsuario})
     promessa.catch(logout)
 }
 function logout(erro) {
-    statusErro = erro.response.status;
-    alert("Ocorreu erro"+ statusErro);
+    const error = erro.response.data
+    const statusErro = erro.response.status
+    const tipoDeErro = "Você foi desconectado por Inatividade!"
+    tratatErros(error, statusErro, tipoDeErro)
+    location.reload();
 }
 function buscarMensagem() {
     const promessa = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages")
@@ -37,32 +56,27 @@ function buscarMensagem() {
 function mensagensRecebidas (resposta) {
     mensagens = resposta.data;
     chatDeMensagens()
-    
 }
 function chatDeMensagens() {
     const todasAsMensagens = document.querySelector(".containerChat");
     todasAsMensagens.innerHTML = "";
     for(let i=0; i < mensagens.length ; i++) {
-        let mensagemDeStatus = mensagens[i].type==='status';
-        let mensagemReservada = mensagens[i].type==='private_message';
-        let mensagemGeral = mensagens[i].type==='message'
-        
-        if(mensagemDeStatus) {
+        if(mensagens[i].type==='status') {
             todasAsMensagens.innerHTML += ` 
             <div class="chat status">
-                (${mensagens[i].time}) ${mensagens[i].from} ${mensagens[i].text}
+                <span class="tempo">(${mensagens[i].time})</span>&nbsp<span class="usuario">${mensagens[i].from}</span>&nbsp${mensagens[i].text}
             </div>
             `
-        } else if(mensagemReservada && (mensagens[i].from===nomeDoUsuario || mensagens[i].to===nomeDoUsuario) ) {
+        } else if(mensagens[i].type==='private_message' && (mensagens[i].from===nomeDoUsuario || mensagens[i].to===nomeDoUsuario) ) {
             todasAsMensagens.innerHTML += ` 
             <div class="chat reservadamente">
-                (${mensagens[i].time}) ${mensagens[i].from} para ${mensagens[i].to}: ${mensagens[i].text}
+                <span class="tempo">(${mensagens[i].time})</span>&nbsp<span class="usuario">${mensagens[i].from}</span> reservadamente para <span class="usuario">${mensagens[i].to}</span>&nbsp: ${mensagens[i].text}
             </div>
             `
-        }else if(mensagemGeral){
+        }else if(mensagens[i].type==='message'){
             todasAsMensagens.innerHTML += ` 
             <div class="chat publico">
-                (${mensagens[i].time}) ${mensagens[i].from} para ${mensagens[i].to}: ${mensagens[i].text}
+                <span class="tempo">(${mensagens[i].time})</span>&nbsp<span class="usuario">${mensagens[i].from}</span> para <span class="usuario">${mensagens[i].to}</span>&nbsp: ${mensagens[i].text}
             </div>
             `
         }
@@ -70,7 +84,6 @@ function chatDeMensagens() {
     let ultimaMensagem = document.querySelector(".containerChat div:last-of-type")
     ultimaMensagem.scrollIntoView();
 }
-
 let tipoDeMensagem = 'message';
 function tipoDaMensagem(mensagemTipo) {
     tipoDeMensagem = mensagemTipo.id;
@@ -80,20 +93,20 @@ function tipoDaMensagem(mensagemTipo) {
     }
     mensagemTipo.classList.add("selecionado")
 } 
-
 function enviarMensagem() {
     const msgDoUsuario = document.querySelector(".mensagem").value
     const novaMensagem = {from: nomeDoUsuario, to: destinatario, text: msgDoUsuario, type: tipoDeMensagem};
     const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages", novaMensagem);
     promessa.then(buscarMensagem);
-    promessa.catch(tratarErro);
+    promessa.catch(tratarErroEnvioMensagem);
     document.querySelector(".mensagem").value="";
     
 }
-function tratarErro(erro) {
-    statusErro = erro.resonse.status
-    alert(`("Ocorreu erro"+ statusErro)`)
-    window.location.reload()
+function tratarErroEnvioMensagem(erro) {
+    const error = erro.response.data
+    const statusErro = erro.response.status
+    const tipoDeErro = "Caracteres Inválidos!"
+    tratatErros(error, statusErro, tipoDeErro)
 }
 document.querySelector(".nomeUsuario").addEventListener("keypress", loginComEnter)
 document.querySelector(".mensagem").addEventListener("keypress", mensagemComEnter)
@@ -107,30 +120,31 @@ function mensagemComEnter(tecla) {
         enviarMensagem()
     }
 }
-
-function atualizarParticipantes() {
-    setInterval(buscarParticipantes, 10000)
-    buscarParticipantes()
-}
-
 function buscarParticipantes() {
     const promessa = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants")
     promessa.then(participantesAtivos)
-    promessa.catch(tratarErro)
+    promessa.catch(tratarErroDeParticipantes)
+}
+function tratarErroDeParticipantes() {
+    const error = erro.response.data
+    const statusErro = erro.response.status
+    const tipoDeErro = "Não foi possivel buscar os Participantes"
+    tratatErros(error, statusErro, tipoDeErro)
 }
 let participantes;
 function participantesAtivos(resposta) {
     participantes = resposta.data
+    listaContatos()
 }
 function abrirAbaContatos() {
     const abaContatos = document.querySelector(".contatosContainer")
     if(abaContatos.classList.contains("oculto")){
         abaContatos.classList.remove("oculto")
-        listaContatos()
+        
     } else {
         abaContatos.classList.add("oculto")
     }
-    
+    descricaoDaMensagem()
 }
 function listaContatos() {
     const todosOsUsuarios = document.querySelector(".listaDeUsuarios");
@@ -159,13 +173,14 @@ let destinatario = 'Todos';
 function enviarPara(pessoa) {
     destinatario = pessoa.id;
     const selecionado = document.querySelector(".listaDeUsuarios .selecionado");
-    
     if (selecionado!==null) {
         selecionado.classList.remove("selecionado");
     }
-    pessoa.classList.add("selecionado")
+    pessoa.classList.add("selecionado");
+}
+function descricaoDaMensagem() {
     const infoDaMensagem = document.querySelector(".infoDestinatario")
-    if(tipoDeMensagem ==='private_message' && destinatario !=='Todos') {
+    if(tipoDeMensagem ==='private_message') {
         infoDaMensagem.innerHTML=`Enviando para ${destinatario} (reservadamente)`
     } else if(tipoDeMensagem ==='message') {
         infoDaMensagem.innerHTML=`Enviando para ${destinatario} (público)`
